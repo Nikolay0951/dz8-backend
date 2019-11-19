@@ -1,0 +1,25 @@
+# @host = https://nikolay0951-api.herokuapp.com
+@host = http://localhost:9999
+
+###
+GET {{host}}/posts
+
+###
+
+DELETE {{host}}/posts/8
+
+###
+
+POST {{host}}/posts
+Content-Type: application/json
+
+{
+    "content": "First message"
+}
+
+###
+
+POST {{host}}/posts/4/likes
+
+###
+DELETE {{host}}/posts/4/likes
