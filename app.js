@@ -12,58 +12,47 @@ server.get('/posts', (req, res) => {
     res.send(posts);
 });
 
+
 server.post('/posts', (req, res) => {
-    posts.push({
+    const newPost = {
         id: nextId++,
         content: req.body.content,
-        type: req.body.type,
         likes: 0,
-    })
-
-    res.send(posts);
-});
+        type: req.body.type
+    }
+    posts.push(newPost)
+    res.send(newPost);
+})
 
 server.delete('/posts/:id', (req, res) => {
-    const id = Number(req.params['id']);
+    const id = +req.params['id'];
     const index = posts.findIndex((o) => {
         return o.id === id;
     });
-
     if (index === -1) {
-        res.status(404).send({ error: 'id.not_found' });
+        res.send();
         return;
     }
-
-    const removed = posts.splice(index, 1);
-    res.send(posts);
-});
+    posts.splice(index, 1);
+    res.end();
+})
 
 server.post('/posts/:id/likes', (req, res) => {
-    const id = Number(req.params['id']);
-    const index = posts.findIndex((o) => {
-        return o.id === id;
+    const id = +req.params['id'];
+    const index = posts.findIndex((post) => {
+        return post.id === id;
     });
-
-    if (index === -1) {
-        res.status(404).send({ error: 'id.not_found' });
-        return;
-    }
-
     posts[index].likes++;
-    res.send(posts[index]);
+    res.send(`${posts[index].likes}`);
 });
 
 server.delete('/posts/:id/likes', (req, res) => {
-    const id = Number(req.params['id']);
+    const id = +req.params['id'];
     const index = posts.findIndex((o) => {
         return o.id === id;
     });
-
-    if (index === -1) {
-        res.status(404).send({ error: 'id.not_found' });
-        return;
-    }
-
-    posts[index].likes--;
-    res.send(posts[index]);
+    posts[index].likes--
+    res.send(`${posts[index].likes}`);
 });
+
+server.listen(process.env.PORT || '9999');
